@@ -1,25 +1,29 @@
-using System.Threading.Tasks;
-using System.Web.Http;
-
-using Microsoft.Bot.Connector;
+using Autofac;
 using Microsoft.Bot.Builder.Dialogs;
-using System.Web.Http.Description;
+using Microsoft.Bot.Connector;
 using System.Net.Http;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace Microsoft.Bot.Sample.SimpleEchoBot
 {
     [BotAuthentication(MicrosoftAppIdSettingName = "Codeslingers-Bots-v3-GraphBot-MicrosoftAppId", MicrosoftAppPasswordSettingName = "Codeslingers-Bots-v3-GraphBot-MicrosoftAppPassword")]
     public class MessagesController : ApiController
     {
-        /// <summary>
-        /// POST: api/Messages
-        /// receive a message from a user and send replies
-        /// </summary>
-        /// <param name="activity"></param>
+        static MessagesController()
+        {
+            Conversation.UpdateContainer(builder => builder.Register(c => ((ClaimsIdentity)HttpContext.Current.User.Identity).GetCredentialsFromClaims())
+                                                           .AsSelf()
+                                                           .InstancePerLifetimeScope());
+        }
+
+
         [ResponseType(typeof(void))]
         public virtual async Task<HttpResponseMessage> Post([FromBody] Activity activity)
         {
-            // check if activity is of type message
             if (activity != null && activity.GetActivityType() == ActivityTypes.Message)
             {
                 await Conversation.SendAsync(activity, () => new EchoDialog());
