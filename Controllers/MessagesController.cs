@@ -8,7 +8,7 @@ using System.Net.Http;
 
 namespace Microsoft.Bot.Sample.SimpleEchoBot
 {
-    [BotAuthentication]
+    [BotAuthentication(MicrosoftAppIdSettingName = "Codeslingers-Bots-v3-GraphBot-MicrosoftAppId", MicrosoftAppPasswordSettingName = "Codeslingers-Bots-v3-GraphBot-MicrosoftAppPassword")]
     public class MessagesController : ApiController
     {
         /// <summary>
