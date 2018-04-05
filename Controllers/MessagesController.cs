@@ -1,6 +1,7 @@
 using Autofac;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using System.Configuration;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -10,17 +11,9 @@ using System.Web.Http.Description;
 
 namespace Microsoft.Bot.Sample.SimpleEchoBot
 {
-    [BotAuthentication(MicrosoftAppIdSettingName = "Codeslingers-Bots-v3-GraphBot-MicrosoftAppId", MicrosoftAppPasswordSettingName = "Codeslingers-Bots-v3-GraphBot-MicrosoftAppPassword")]
+    [BotAuthentication()]
     public class MessagesController : ApiController
     {
-        static MessagesController()
-        {
-            Conversation.UpdateContainer(builder => builder.Register(c => ((ClaimsIdentity)HttpContext.Current.User.Identity).GetCredentialsFromClaims())
-                                                           .AsSelf()
-                                                           .InstancePerLifetimeScope());
-        }
-
-
         [ResponseType(typeof(void))]
         public virtual async Task<HttpResponseMessage> Post([FromBody] Activity activity)
         {
