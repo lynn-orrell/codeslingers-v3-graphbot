@@ -9,7 +9,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 
-namespace Microsoft.Bot.Sample.SimpleEchoBot
+namespace Codeslingers.Bots.v3.GraphBot
 {
     [BotAuthentication()]
     public class MessagesController : ApiController

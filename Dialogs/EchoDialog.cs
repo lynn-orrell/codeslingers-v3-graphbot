@@ -6,7 +6,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using System.Net.Http;
 
 
-namespace Microsoft.Bot.Sample.SimpleEchoBot
+namespace Codeslingers.Bots.v3.GraphBot
 {
     [Serializable]
     public class EchoDialog : IDialog<object>
