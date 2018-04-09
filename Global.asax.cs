@@ -6,6 +6,11 @@ using Microsoft.Bot.Builder.Azure;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Internals;
 using Microsoft.Bot.Connector;
+using BotAuth.AADv2;
+using Codeslingers.Bots.v3.GraphBot.Dialogs;
+using Autofac.Integration.WebApi;
+using Microsoft.Bot.Builder.Internals.Fibers;
+using System.Net.Http;
 
 namespace Codeslingers.Bots.v3.GraphBot
 {
@@ -33,6 +38,23 @@ namespace Codeslingers.Bots.v3.GraphBot
                         .Keyed<IBotDataStore<BotData>>(AzureModule.Key_DataStore)
                         .AsSelf()
                         .SingleInstance();
+
+                    builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+
+                    builder.Register<HttpClient>(c => new HttpClient())
+                           .Keyed<HttpClient>(FiberModule.Key_DoNotSerialize)
+                           .AsSelf()
+                           .SingleInstance();
+
+                    builder.RegisterType<DialogFactory>()
+                           .Keyed<IDialogFactory>(FiberModule.Key_DoNotSerialize)
+                           .AsImplementedInterfaces()
+                           .SingleInstance();
+
+                    builder.Register(c => new MSALAuthProvider()).AsImplementedInterfaces().SingleInstance();
+
+                    builder.RegisterType<RootDialog>();
+                    builder.RegisterType<EchoDialog>();
 
                 });
             GlobalConfiguration.Configure(WebApiConfig.Register);
