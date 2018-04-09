@@ -2,15 +2,9 @@ using Autofac;
 using Codeslingers.Bots.v3.GraphBot.Dialogs;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Internals;
-using Microsoft.Bot.Builder.Internals.Fibers;
 using Microsoft.Bot.Connector;
-using System;
-using System.Configuration;
 using System.Net.Http;
-using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -19,13 +13,6 @@ namespace Codeslingers.Bots.v3.GraphBot
     [BotAuthentication()]
     public class MessagesController : ApiController
     {
-        //private readonly ILifetimeScope _scope;
-
-        //public MessagesController(ILifetimeScope scope)
-        //{
-        //    SetField.NotNull(out this._scope, nameof(_scope), scope);
-        //}
-
         [ResponseType(typeof(void))]
         public virtual async Task<HttpResponseMessage> Post([FromBody] Activity activity)
         {
@@ -33,16 +20,8 @@ namespace Codeslingers.Bots.v3.GraphBot
             {
                 using (var scope = DialogModule.BeginLifetimeScope(Conversation.Container, activity))
                 {
-                    // register the function to provide the root dialog
-                    Func<IDialog<object>> makeRoot = () => scope.Resolve<RootDialog>();
-                    scope.Resolve<Func<IDialog<object>>>(TypedParameter.From(makeRoot));
-
-                    // start the dialog process by posting the activity to IPostToBot in the 
-                    // same scope as the root dialog
-                    var task = scope.Resolve<IPostToBot>();
-                    await task.PostAsync(activity, CancellationToken.None);
+                    await Conversation.SendAsync(activity, () => scope.Resolve<RootDialog>());
                 }
-                //await Conversation.SendAsync(activity, () => new RootDialog());
             }
             else
             {
