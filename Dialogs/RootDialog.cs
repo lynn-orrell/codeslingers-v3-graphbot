@@ -39,9 +39,9 @@ namespace Codeslingers.Bots.v3.GraphBot.Dialogs
             // Initialize AuthenticationOptions and forward to AuthDialog for token
             AuthenticationOptions options = new AuthenticationOptions()
             {
-                Authority = ConfigurationManager.AppSettings["aad:Authority"],
-                ClientId = ConfigurationManager.AppSettings["aad:ClientId"],
-                ClientSecret = ConfigurationManager.AppSettings["aad:ClientSecret"],
+                Authority = ConfigurationManager.AppSettings["Authority"],
+                ClientId = ConfigurationManager.AppSettings["ClientId"],
+                ClientSecret = ConfigurationManager.AppSettings["ClientSecret"],
                 Scopes = new string[] { "User.Read" },
                 RedirectUrl = ConfigurationManager.AppSettings["aad:Callback"]
             };
